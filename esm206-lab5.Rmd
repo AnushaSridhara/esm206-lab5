@@ -40,14 +40,113 @@ Mean otter length is 36.9 inches $\pm$ 9.3 (mean $\pm$sd, n=8) with a 95% confid
 
 #### Now using in-line referencing 
 
-Mean otter length is `r round(otter_ci$estimate, 1)` inches.
+Mean otter length is `r round(otter_ci$estimate, 1)` inches with a 95% confidence intervals of [`r round(otter_ci$conf.int[1],1)` `r round(otter_ci$conf.int[2], 1)`] inches
+
+if it is a vector with multiple elements, we use[#]
+
+## Part 2: Two sample T tests
+
+Make two mock samples and ask the question do we have sufficient evidence to make us reject the null hypothesis that these samples were drawn from populations with the same mean?
 
 
+### Example 1
+```{r}
+#Make my mock samples
+oak_trees <- c(20, 19, 24, 28, 34, 12, 15, 25, 200, 180, 300)
+  
+pine_trees <- c(39, 26, 20, 30, 37, 22, 19, 18)
 
+# Two-sample t-test
+tree_t <- t.test(oak_trees, pine_trees) # two sided sample t test - it is only asking are they different enough in either directions for me to reject the null hypothesis
+
+# Null hypothesis: mean heights are the same
+# i.e.: Trees are drawn from populations with the same mean height
+```
+
+the mean heights of oak and pine trees were (X +- Y) and (X +- Y), respectively, and the difference was not significant (t(`r tree_t$parameter`) = `r tree_t$statistic`, p = `r tree_t$p.value`).
+
+"two-sample t-test; t(df) = t-statistic, p = p-value"
+
+*AVOID*: p = 0
+
+when things get really small (usually p < 0.001)
+
+*Not great:* p= 0.0000000013
+*Better:* p < 0.001
+
+## Part 3: Another t-test with cars data
+
+Using the 'mpg' dataset
+
+### Take a look at the data
 
 ```{r}
+compact_suv <- mpg %>% 
+  filter(class %in% c("compact", "suv"))
 
+# Check for remaining levels 
+unique(compact_suv$class) # returns the unique values that are exisitng in the file - only compact and suv groups of data are there 
 ```
+
+Create a histogram of city gas mileage (cty) faceted by class starting from compact suv
+```{r}
+ggplot(data = compact_suv, aes(x= cty))+
+  geom_histogram(bins = 12)+
+  facet_wrap(~class)
+
+
+ggplot(data = compact_suv, aes(sample = cty))+
+  geom_qq()+
+  facet_wrap(~class)
+```
+
+present more info about samples and not just t test results
+Find some summary statistics for each group.
+```{r}
+car_stats <- compact_suv %>% 
+  group_by(class) %>% 
+  summarize(
+    mean_city = round (mean(cty),2),
+    sd_city = round (sd(cty), 2),
+    sample_Size = n()
+  )
+
+car_stats
+```
+
+The t.test() function REALLY wants vectors of things.Use the 'pull()` function to pull out a vector from a dataframe (single column of values)
+
+```{r}
+compact_sample <- compact_suv %>% 
+  filter(class== "compact") %>% 
+  pull(cty)
+```
+
+# Your turn : do the same thing to get a vector of gas mileages for SUVs
+```{r}
+suv_sample <- compact_suv %>% 
+  filter(class == "suv") %>% 
+  pull(cty)
+```
+
+H0: Mean city gas mileages for SUVs and compact cars are the same
+```{r}
+t.test(compact_sample, suv_sample)
+```
+There is a significant difference in mean city gas mileage for SUVs and compact cars (t(df) = t-statistic, p < 0.001).
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

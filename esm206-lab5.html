@@ -189,6 +189,10 @@ pre code {
 <ul>
 <li><a href="#example-1">Example 1</a></li>
 </ul></li>
+<li><a href="#part-2-two-sample-t-tests">Part 2: Two sample T tests</a>
+<ul>
+<li><a href="#example-1-1">Example 1</a></li>
+</ul></li>
 <li><a href="#r-markdown">R Markdown</a></li>
 <li><a href="#including-plots">Including Plots</a></li>
 </ul>
@@ -215,8 +219,31 @@ otter_sd &lt;- sd(otter_lengths)</code></pre>
 <p>Mean otter length is 36.9 inches <span class="math inline">\(\pm\)</span> 9.3 (mean <span class="math inline">\(\pm\)</span>sd, n=8) with a 95% confidence interval of [29.1, 44.7] inches.</p>
 <div id="now-using-in-line-referencing" class="section level4">
 <h4>Now using in-line referencing</h4>
-<p>Mean otter length is 51.7 inches.</p>
+<p>Mean otter length is 51.7 inches with a 95% confidence intervals of [32.9 70.6] inches</p>
+<p>if it is a vector with multiple elements, we use[#]</p>
 </div>
+</div>
+</div>
+<div id="part-2-two-sample-t-tests" class="section level2">
+<h2>Part 2: Two sample T tests</h2>
+<p>Make two mock samples and ask the question do we have sufficient evidence to make us reject the null hypothesis that these samples were drawn from populations with the same mean?</p>
+<div id="example-1-1" class="section level3">
+<h3>Example 1</h3>
+<pre class="r"><code>#Make my mock samples
+oak_trees &lt;- c(20, 19, 24, 28, 34, 12, 15, 25, 200, 180, 300)
+  
+pine_trees &lt;- c(39, 26, 20, 30, 37, 22, 19, 18)
+
+# Two-sample t-test
+tree_t &lt;- t.test(oak_trees, pine_trees) # two sided sample t test - it is only asking are they different enough in either directions for me to reject the null hypothesis
+
+# Null hypothesis: mean heights are the same
+# i.e.: Trees are drawn from populations with the same mean height</code></pre>
+<p>the mean heights of oak and pine trees were (X +- Y) and (X +- Y), respectively, and the difference was not significant (t(10.1843849) = 1.7021779, p = 0.118999).</p>
+<p>“two-sample t-test; t(df) = t-statistic, p = p-value”</p>
+<p><em>AVOID</em>: p = 0</p>
+<p>when things get really small (usually p &lt; 0.001)</p>
+<p><em>Not great:</em> p= 0.0000000013 <em>Better:</em> p &lt; 0.001</p>
 </div>
 </div>
 <div id="r-markdown" class="section level2">
